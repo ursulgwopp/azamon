@@ -15,6 +15,8 @@ import (
 	"github.com/ursulgwopp/azamon/internal/handler"
 	"github.com/ursulgwopp/azamon/internal/repository"
 	"github.com/ursulgwopp/azamon/internal/service"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
