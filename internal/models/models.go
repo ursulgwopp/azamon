@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// auth
 type SignUpRequest struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required"`
@@ -18,7 +19,7 @@ type SignInRequest struct {
 
 type TokenClaims struct {
 	jwt.StandardClaims
-	Id int
+	Username string
 }
 
 type Profile struct {
@@ -27,4 +28,14 @@ type Profile struct {
 	Email     string      `json:"email"`
 	Balance   float64     `json:"balance"`
 	ItemsList []uuid.UUID `json:"itemsList"`
+}
+
+// items
+type Item struct {
+	Id          uuid.UUID `json:"id"`
+	Seller      string    `json:"seller"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Quantity    int       `json:"quantity"`
+	Price       float64   `json:"price"`
 }

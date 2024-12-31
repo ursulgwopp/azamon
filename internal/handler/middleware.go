@@ -24,17 +24,17 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return
 	}
 
-	id, err := parseToken(token)
+	username, err := parseToken(token)
 	if err != nil {
 		// models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
 	c.Set("token", token)
-	c.Set("id", id)
+	c.Set("username", username)
 }
 
-func parseToken(token string) (int, error) {
+func parseToken(token string) (string, error) {
 	token_, err := jwt.ParseWithClaims(token, &models.TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.ErrInvalidSigningMethod
@@ -43,13 +43,13 @@ func parseToken(token string) (int, error) {
 		return []byte(os.Getenv("SECRET_KEY")), nil
 	})
 	if err != nil {
-		return -1, err
+		return "", err
 	}
 
 	claims, ok := token_.Claims.(*models.TokenClaims)
 	if !ok {
-		return -1, errors.ErrInvalidTokenClaims
+		return "", errors.ErrInvalidTokenClaims
 	}
 
-	return claims.Id, nil
+	return claims.Username, nil
 }
