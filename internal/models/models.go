@@ -31,6 +31,13 @@ type Profile struct {
 }
 
 // items
+type ItemRequest struct {
+	Name        string  `json:"name" binding:"required"`
+	Description string  `json:"description" binding:"required"`
+	Quantity    int     `json:"quantity" binding:"required"`
+	Price       float64 `json:"price" binding:"required"`
+}
+
 type Item struct {
 	Id          uuid.UUID `json:"id"`
 	Seller      string    `json:"seller"`

@@ -9,18 +9,18 @@ CREATE TABLE users (
 
 CREATE TABLE items (
     id UUID PRIMARY KEY UNIQUE NOT NULL,
-    seller_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    seller TEXT NOT NULL REFERENCES users(username) ON DELETE CASCADE,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
-    price DECIMAL NOT NULL,
-    quantity INTEGER NOT NULL
+    quantity INTEGER NOT NULL,
+    price DECIMAL NOT NULL
 );
 
 CREATE TABLE purchases (
     id UUID PRIMARY KEY UNIQUE NOT NULL,
-    buyer_id INTEGER NOT NULL REFERENCES users(id),
-    seller_id INTEGER NOT NULL REFERENCES users(id),
-    item_id UUID NOT NULL REFERENCES items(id),
+    buyer TEXT NOT NULL REFERENCES users(username),
+    seller TEXT NOT NULL REFERENCES users(username),
+    name TEXT NOT NULL REFERENCES items(name),
     quantity INTEGER NOT NULL,
     final_price DECIMAL NOT NULL,
     purchased_at TIMESTAMP NOT NULL
