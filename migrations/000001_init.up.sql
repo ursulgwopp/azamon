@@ -1,10 +1,10 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
-    hash_password TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
+    hash_password TEXT NOT NULL,
     balance DECIMAL DEFAULT 0,
-    goods_list UUID[] DEFAULT '{}'
+    items_list UUID[] DEFAULT '{}'
 );
 
 CREATE TABLE items (

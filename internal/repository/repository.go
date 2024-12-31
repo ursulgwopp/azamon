@@ -2,12 +2,13 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/ursulgwopp/azamon/configs"
 )
 
-// const operationTimeout = time.Second * 3
+const operationTimeout = time.Second * 3
 
 type PostgresRepository struct {
 	db *sqlx.DB
