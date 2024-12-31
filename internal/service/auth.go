@@ -111,3 +111,7 @@ func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 func (s *Service) SignOut(token string) error {
 	return s.repo.SignOut(token)
 }
+
+func (s *Service) ValidateToken(token string) error {
+	return s.repo.ValidateToken(token)
+}

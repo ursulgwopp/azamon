@@ -9,6 +9,7 @@ type Service interface {
 	SignUp(req models.SignUpRequest) (models.Profile, error)
 	SignIn(req models.SignInRequest) (string, error)
 	SignOut(token string) error
+	ValidateToken(token string) error
 }
 
 type Handler struct {

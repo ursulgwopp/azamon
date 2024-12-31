@@ -48,3 +48,21 @@ func (r *PostgresRepository) SignOut(token string) error {
 
 	return err
 }
+
+func (r *PostgresRepository) ValidateToken(token string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var exists bool
+
+	query := `SELECT EXISTS(SELECT 1 FROM blacklist WHERE token = $1)`
+	if err := r.db.QueryRowContext(ctx, query, token).Scan(&exists); err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.ErrInvalidToken
+	}
+
+	return nil
+}
