@@ -92,7 +92,7 @@ func (s *Service) SignUp(req models.SignUpRequest) (models.Profile, error) {
 func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 	req.Password = generatePasswordHash(req.Password)
 
-	id, err := s.repo.SignIn(req)
+	username, err := s.repo.SignIn(req)
 	if err != nil {
 		return "", err
 	}
@@ -102,7 +102,7 @@ func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
-		Id: id,
+		Username: username,
 	})
 
 	return jwtToken.SignedString([]byte(os.Getenv("SECRET_KEY")))

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/lib/pq"
 	"github.com/ursulgwopp/azamon/internal/errors"
 	"github.com/ursulgwopp/azamon/internal/models"
 )
@@ -14,29 +15,29 @@ func (r *PostgresRepository) SignUp(req models.SignUpRequest) (models.Profile, e
 	var profile models.Profile
 
 	query := `INSERT INTO users (username, email, hash_password) VALUES ($1, $2, $3) RETURNING id, username, email, balance, items_list`
-	if err := r.db.QueryRowContext(ctx, query, req.Username, req.Email, req.Password).Scan(&profile.Id, &profile.Username, &profile.Email, &profile.Balance, &profile.ItemsList); err != nil {
+	if err := r.db.QueryRowContext(ctx, query, req.Username, req.Email, req.Password).Scan(&profile.Id, &profile.Username, &profile.Email, &profile.Balance, pq.Array(&profile.ItemsList)); err != nil {
 		return models.Profile{}, err
 	}
 
 	return profile, nil
 }
 
-func (r *PostgresRepository) SignIn(req models.SignInRequest) (int, error) {
+func (r *PostgresRepository) SignIn(req models.SignInRequest) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
 	defer cancel()
 
-	var id int
+	var username string
 
-	query := `SELECT id FROM users WHERE username = $1 AND hash_password = $2`
-	if err := r.db.QueryRowContext(ctx, query, req.Username, req.Password).Scan(&id); err != nil {
+	query := `SELECT username FROM users WHERE username = $1 AND hash_password = $2`
+	if err := r.db.QueryRowContext(ctx, query, req.Username, req.Password).Scan(&username); err != nil {
 		if err.Error() == "sql: no rows in result set" {
-			return -1, errors.ErrInvalidUsernameOrPassword
+			return "", errors.ErrInvalidUsernameOrPassword
 		}
 
-		return -1, err
+		return "", err
 	}
 
-	return id, nil
+	return username, nil
 }
 
 func (r *PostgresRepository) SignOut(token string) error {
